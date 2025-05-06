@@ -113,9 +113,9 @@ export default function UnitTable({ data, columnConfig }: UnitTableProps) {
 	return (
 		<TableContainer
 			component={Paper}
-			sx={{ border: '1px solid #E9EAEB', maxWidth: '100%', boxShadow: 'none' }}
+			sx={{ border: '1px solid #E9EAEB', minWidth: '100%', boxShadow: 'none' }}
 		>
-			<Table sx={{ minWidth: 650 }}>
+			<Table sx={{ minWidth: '100%' }}>
 				<TableHead>
 					{table.getHeaderGroups().map((headerGroup) => (
 						<TableRow key={headerGroup.id}>

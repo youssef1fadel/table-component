@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Typography, Box } from '@mui/material'
+import { Typography, Box } from '@mui/material'
 import UnitTable, { type Unit, type ColumnConfig } from './UnitTable'
 import TabSlider from './TabSlider'
 
@@ -120,8 +120,8 @@ export default function UnitManager() {
 	}, [activeTab])
 
 	return (
-		<Box p={2} sx={{ border: '1px solid #E9EAEB', borderRadius: '8px' }}>
-			<Box display="flex" alignItems="center">
+		<Box sx={{ border: '1px solid #E9EAEB', borderRadius: '8px' }}>
+			<Box p={2} display="flex" alignItems="center">
 				<Typography variant="h6" component="label">
 					Units
 				</Typography>

@@ -41,7 +41,7 @@ export default function TabSlider({
 	}
 
 	return (
-		<Box>
+		<Box ml={2}>
 			<ToggleButtonGroup
 				value={activeIndex}
 				exclusive
