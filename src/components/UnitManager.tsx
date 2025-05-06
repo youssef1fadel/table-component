@@ -1,7 +1,6 @@
 import React from 'react'
 import { Button, Typography, Box } from '@mui/material'
-import UnitTable, { type Unit } from './UnitTable'
-import { type ColumnDef } from '@tanstack/react-table'
+import UnitTable, { type Unit, type ColumnConfig } from './UnitTable'
 import TabSlider from './TabSlider'
 
 // Sample data
@@ -74,55 +73,31 @@ const tabs = [
 	},
 ]
 
-// Column definitions
-const columns: ColumnDef<Unit>[] = [
+// Abstract column definitions
+const columnConfig: ColumnConfig[] = [
 	{
-		accessorKey: 'unitId',
-		header: () => (
-			<Box>
-				<Typography variant="caption" color="green">
-					Unit Code
-				</Typography>
-				<br />
-				Unit ID
-			</Box>
-		),
+		key: 'unitId',
+		primaryLabel: 'Unit ID',
+		secondaryLabel: 'Unit Code',
+		secondaryStyle: 'success',
 	},
 	{
-		accessorKey: 'unitTypeCode',
-		header: () => (
-			<Box>
-				<Typography variant="caption" color="green">
-					Unit Type
-				</Typography>
-				<br />
-				Unit Type Code
-			</Box>
-		),
+		key: 'unitTypeCode',
+		primaryLabel: 'Unit Type Code',
+		secondaryLabel: 'Unit Type',
+		secondaryStyle: 'success',
 	},
 	{
-		accessorKey: 'category',
-		header: () => (
-			<Box>
-				<Typography variant="caption" color="red">
-					Unmapped
-				</Typography>
-				<br />
-				Category
-			</Box>
-		),
+		key: 'category',
+		primaryLabel: 'Category',
+		secondaryLabel: 'Unmapped',
+		secondaryStyle: 'error',
 	},
 	{
-		accessorKey: 'project',
-		header: () => (
-			<Box>
-				<Typography variant="caption" color="red">
-					Unmapped
-				</Typography>
-				<br />
-				Project
-			</Box>
-		),
+		key: 'project',
+		primaryLabel: 'Project',
+		secondaryLabel: 'Unmapped',
+		secondaryStyle: 'error',
 	},
 ]
 
@@ -145,14 +120,30 @@ export default function UnitManager() {
 	}, [activeTab])
 
 	return (
-		<Box p={2}>
-			<Box display="flex" justifyContent="space-between" mb={2}>
-				<Typography variant="h6">
-					Units{' '}
-					<Button size="small" variant="outlined">
-						{filteredData.length} Unit{filteredData.length !== 1 ? 's' : ''}
-					</Button>
+		<Box p={2} sx={{ border: '1px solid #E9EAEB', borderRadius: '8px' }}>
+			<Box display="flex" alignItems="center">
+				<Typography variant="h6" component="label">
+					Units
 				</Typography>
+				<Box
+					component="span"
+					sx={{
+						display: 'inline-flex',
+						alignItems: 'center',
+						justifyContent: 'center',
+						border: '1px solid #015A9A',
+						borderRadius: '20px',
+						padding: '2px 8px',
+						ml: 1,
+						fontSize: '0.75rem',
+						color: '#015A9A',
+						backgroundColor: '#E5F3FE',
+						textTransform: 'lowercase',
+						lineHeight: 1.5,
+					}}
+				>
+					{filteredData.length} unit{filteredData.length !== 1 ? 's' : ''}
+				</Box>
 			</Box>
 			{/* Use the TabSlider component */}
 			<TabSlider
@@ -161,7 +152,7 @@ export default function UnitManager() {
 				onChange={handleTabChange}
 			/>
 
-			<UnitTable data={filteredData} columns={columns} />
+			<UnitTable data={filteredData} columnConfig={columnConfig} />
 		</Box>
 	)
 }

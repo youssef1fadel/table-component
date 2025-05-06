@@ -15,17 +15,20 @@ type TabSliderProps = {
 	transitionDuration?: string
 	borderRadius?: number
 	containerBgColor?: string
+	borderColor?: string
+	textColor?: string
 }
 
 export default function TabSlider({
 	tabs,
 	activeIndex,
 	onChange,
-	color = '#1976d2',
+	color = '#015C9A',
 	height = 36,
-	transitionDuration = '0.3s',
-	borderRadius = 4,
-	containerBgColor = '#f7f7f7',
+	transitionDuration = '0.1s',
+	containerBgColor = 'transparent',
+	borderColor = '#E9EAEB',
+	textColor = '#717680',
 }: TabSliderProps) {
 	// Convert the tab onChange signature to match ToggleButtonGroup's
 	const handleChange = (
@@ -48,19 +51,20 @@ export default function TabSlider({
 				sx={{
 					display: 'inline-flex',
 					bgcolor: containerBgColor,
-					borderRadius: 2,
-					p: 0.5,
+					borderRadius: '8px',
+					p: '4px',
 					mb: 2,
-					boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+					border: `1px solid ${borderColor}`,
+					overflow: 'hidden',
 					'& .MuiToggleButtonGroup-grouped': {
 						border: 0,
-						borderRadius: `${borderRadius}px !important`,
+						borderRadius: 2,
 						minHeight: height,
 						height: height,
 						textTransform: 'none',
 						transition: `background-color ${transitionDuration}, color ${transitionDuration}`,
-						color: 'text.primary',
-						fontWeight: 'medium',
+						color: textColor,
+						fontWeight: 'bold',
 						px: 2,
 						'&.Mui-selected': {
 							bgcolor: color,
