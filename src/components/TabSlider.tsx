@@ -1,13 +1,13 @@
 import React from 'react'
-import { Box, ToggleButtonGroup, ToggleButton, IconButton } from '@mui/material'
+import { Box, Tabs, Tab, IconButton } from '@mui/material'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 
 type TabOption = {
 	label: string
 	value: number | string
-  units?: number
-  ignored?: boolean
+	units?: number
+	ignored?: boolean
 }
 
 type TabSliderProps = {
@@ -18,10 +18,9 @@ type TabSliderProps = {
 	color?: string
 	height?: number
 	transitionDuration?: string
-	borderRadius?: number
 	containerBgColor?: string
-	borderColor?: string
 	textColor?: string
+	indicatorColor?: string
 }
 
 export default function TabSlider({
@@ -33,65 +32,50 @@ export default function TabSlider({
 	height = 36,
 	transitionDuration = '0.1s',
 	containerBgColor = 'transparent',
-	borderColor = '#E9EAEB',
 	textColor = '#717680',
+	indicatorColor = '#015C9A',
 }: TabSliderProps) {
-	// Convert the tab onChange signature to match ToggleButtonGroup's
-	const handleChange = (
-		event: React.MouseEvent<HTMLElement>,
-		newValue: number | string | null
-	) => {
-		if (newValue !== null) {
-			onChange(event as React.SyntheticEvent, Number(newValue))
-		}
+	// Handle tab change
+	const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
+		onChange(_event, newValue)
 	}
 
+	// Handle toggle ignore
 	const handleToggleIgnore = (
 		event: React.MouseEvent<HTMLElement>,
 		tabValue: number | string
 	) => {
-		event.stopPropagation(); // Prevent tab selection when clicking the eye icon
+		event.stopPropagation() // Prevent tab selection when clicking the eye icon
 		if (onToggleIgnore) {
-			onToggleIgnore(tabValue);
+			onToggleIgnore(tabValue)
 		}
 	}
 
 	return (
-		<Box>
-			<ToggleButtonGroup
+		<Box sx={{ bgcolor: containerBgColor }}>
+			<Tabs
 				value={activeIndex}
-				exclusive
 				onChange={handleChange}
-				aria-label="selector"
-				size="small"
+				aria-label="basic tabs"
+				textColor="inherit"
+				TabIndicatorProps={{
+					style: { backgroundColor: indicatorColor },
+				}}
 				sx={{
-					display: 'inline-flex',
-					bgcolor: containerBgColor,
-					borderRadius: '8px',
-					p: '2px',
-					border: `1px solid ${borderColor}`,
-					overflow: 'hidden',
-					'& .MuiToggleButtonGroup-grouped': {
-						border: `1px solid ${borderColor}`,
-						m: '2px',
-						borderRadius: 2,
+					minHeight: height,
+					'& .MuiTab-root': {
+						color: textColor,
+						fontWeight: 'medium',
+						textTransform: 'none',
+            borderRadius: '8px 8px 0px 0px',
 						minHeight: height,
 						height: height,
-						textTransform: 'none',
-						transition: `background-color ${transitionDuration}, color ${transitionDuration}`,
-						color: textColor,
-						fontWeight: 'bold',
-						px: 2,
+						transition: `color ${transitionDuration}`,
+						opacity: 1,
+						padding: '0 8px', // Reduced horizontal padding (default is 12px)
 						'&.Mui-selected': {
-							bgcolor: color,
-							color: '#fff',
-							'&:hover': {
-								bgcolor: color,
-								opacity: 0.9,
-							},
-						},
-						'&:hover': {
-							bgcolor: 'rgba(0, 0, 0, 0.04)',
+							color,
+							fontWeight: 'bold',
 						},
 						'&.ignored': {
 							opacity: 0.6,
@@ -101,42 +85,32 @@ export default function TabSlider({
 				}}
 			>
 				{tabs.map((tab) => (
-					<ToggleButton
+					<Tab
 						key={tab.value}
-						value={tab.value}
+						value={Number(tab.value)}
 						className={tab.ignored ? 'ignored' : ''}
-					>
-						<Box
-							sx={{
-								display: 'flex',
-								alignItems: 'center',
-								justifyContent: 'space-between',
-								width: '100%',
-							}}
-						>
-							{onToggleIgnore && (
-								<IconButton
-									size="small"
-									onClick={(e) => handleToggleIgnore(e, tab.value)}
-									sx={{
-										ml: 1,
-										p: 0.5,
-										color: 'inherit',
-										opacity: 0.7,
-										'&:hover': {
-											opacity: 1,
-											bgcolor: 'transparent',
-										},
-									}}
-								>
-									{tab.ignored ? (
-										<VisibilityOffIcon fontSize="small" />
-									) : (
-										<VisibilityIcon fontSize="small" />
-									)}
-								</IconButton>
-							)}
+						label={
 							<Box sx={{ display: 'flex', alignItems: 'center' }}>
+								{onToggleIgnore && (
+									<IconButton
+										size="small"
+										onClick={(e) => handleToggleIgnore(e, tab.value)}
+										sx={{
+											color: 'inherit',
+											opacity: 0.7,
+											'&:hover': {
+												opacity: 1,
+												bgcolor: 'transparent',
+											},
+										}}
+									>
+										{tab.ignored ? (
+											<VisibilityOffIcon fontSize="small" />
+										) : (
+											<VisibilityIcon fontSize="small" />
+										)}
+									</IconButton>
+								)}
 								{tab.label}
 								{tab.units !== undefined && (
 									<Box
@@ -146,9 +120,9 @@ export default function TabSlider({
 											alignItems: 'center',
 											justifyContent: 'center',
 											ml: 1,
-											backgroundColor: 'rgba(255, 255, 255, 0.85)',
-											color: '#333',
+											backgroundColor: 'rgba(234, 234, 234, 0.85)',
 											borderRadius: '20px',
+											color: '#444',
 											fontSize: '0.75rem',
 											fontWeight: 'bold',
 											padding: '2 8px',
@@ -156,8 +130,8 @@ export default function TabSlider({
 											height: '20px',
 											transition: `background-color ${transitionDuration}`,
 											'.Mui-selected &': {
-												backgroundColor: 'rgba(255, 255, 255, 0.85)',
 												color: color,
+												backgroundColor: 'rgba(1, 92, 154, 0.15)',
 											},
 										}}
 									>
@@ -165,10 +139,10 @@ export default function TabSlider({
 									</Box>
 								)}
 							</Box>
-						</Box>
-					</ToggleButton>
+						}
+					/>
 				))}
-			</ToggleButtonGroup>
+			</Tabs>
 		</Box>
 	)
 }
