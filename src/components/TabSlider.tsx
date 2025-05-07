@@ -42,7 +42,7 @@ export default function TabSlider({
 	}
 
 	return (
-		<Box ml={2}>
+		<Box>
 			<ToggleButtonGroup
 				value={activeIndex}
 				exclusive
@@ -53,7 +53,6 @@ export default function TabSlider({
 					display: 'inline-flex',
 					bgcolor: containerBgColor,
 					borderRadius: '8px',
-					mb: 2,
           p: '2px',
 					border: `1px solid ${borderColor}`,
 					overflow: 'hidden',

@@ -71,7 +71,7 @@ export default function UnitTable({ data, columnConfig }: UnitTableProps) {
 								)
 									? 'primary.main'
 									: 'text.disabled',
-								marginBottom: '-4.5px',
+								marginBottom: '-4px',
 							}}
 						/>
 						<KeyboardArrowDownIcon
@@ -83,7 +83,7 @@ export default function UnitTable({ data, columnConfig }: UnitTableProps) {
 								)
 									? 'primary.main'
 									: 'text.disabled',
-								marginTop: '-4.5px',
+								marginTop: '-4px',
 							}}
 						/>
 					</Stack>
