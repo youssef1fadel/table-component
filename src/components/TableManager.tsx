@@ -7,7 +7,7 @@ import {
 	Modal,
 	IconButton,
 } from '@mui/material'
-import UnitTable, { type Unit, type ColumnConfig } from './UnitTable'
+import UnitTable, { type Unit, type ColumnConfig } from './TableGrid'
 import TabSlider from './TabSlider'
 import FullscreenIcon from '@mui/icons-material/Fullscreen'
 
@@ -183,7 +183,7 @@ const columnConfig: ColumnConfig[] = [
 	},
 ]
 
-export default function UnitManager() {
+export default function TableManager() {
 	const [activeTab, setActiveTab] = React.useState(3)
 	const [sheetType, setSheetType] = React.useState<'input' | 'output'>('input')
 
@@ -354,16 +354,16 @@ export default function UnitManager() {
 	}
 
 	const modalContainerStyle = {
-		position: 'absolute',
-		top: '50%',
+		position: 'fixed',
+		top: '5vh',
 		left: '50%',
-		transform: 'translate(-50%, -50%)',
-		width: '90%',
+		transform: 'translateX(-50%)',
+		width: '100%',
 		maxWidth: 1200,
-		maxHeight: '90vh',
+		height: '90vh',
 		bgcolor: 'background.paper',
 		boxShadow: 24,
-		p: 4,
+		p: 2,
 		borderRadius: STYLES.borderRadius,
 		display: 'flex',
 		flexDirection: 'column',
@@ -447,8 +447,7 @@ export default function UnitManager() {
 						mb={2}
 					>
 						<Typography variant="h6" component="h2">
-							{sheetType === 'input' ? 'Input' : 'Output'} Units -{' '}
-							{activeTabs.find((tab) => tab.value === activeTab)?.label}
+							{sheetType === 'input' ? 'Input' : 'Output'} Units
 							<Box component="span" sx={badgeStyle}>
 								{filteredData.length} unit{filteredData.length !== 1 ? 's' : ''}
 							</Box>
@@ -469,6 +468,16 @@ export default function UnitManager() {
 								Close
 							</Box>
 						</IconButton>
+					</Box>
+
+					{/* Add TabSlider to the modal */}
+					<Box display="flex" alignItems="center" mb={2}>
+						<TabSlider
+							tabs={activeTabs}
+							activeIndex={activeTab}
+							onChange={handleTabChange}
+							onToggleIgnore={handleToggleIgnore}
+						/>
 					</Box>
 
 					<Box sx={{ overflow: 'auto', flexGrow: 1 }}>

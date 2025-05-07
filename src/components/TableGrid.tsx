@@ -34,7 +34,7 @@ export type ColumnConfig = {
 	primaryLabel: string
 }
 
-type UnitTableProps = {
+type TableGridProps = {
 	data: Unit[]
 	columnConfig: ColumnConfig[]
 	textColor?: string
@@ -43,14 +43,14 @@ type UnitTableProps = {
 	cellPadding?: string
 }
 
-export default function UnitTable({
+export default function TableGrid({
 	data,
 	columnConfig,
 	textColor = '#717680',
 	borderColor = '#E9EAEB',
 	headerTextColor = '#717680',
 	cellPadding = '4px 16px',
-}: UnitTableProps) {
+}: TableGridProps) {
 	const [sorting, setSorting] = React.useState<SortingState>([])
 
 	// Column styling configuration

@@ -105,6 +105,7 @@ export default function TabSlider({
 	const iconButtonStyles = {
 		color: 'inherit',
 		opacity: 0.7,
+    ml: '-4px',
 		'&:hover': {
 			opacity: 1,
 			bgcolor: 'transparent',
