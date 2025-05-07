@@ -4,6 +4,7 @@ import { Box, ToggleButtonGroup, ToggleButton } from '@mui/material'
 type TabOption = {
 	label: string
 	value: number | string
+  units?: number
 }
 
 type TabSliderProps = {
@@ -52,12 +53,13 @@ export default function TabSlider({
 					display: 'inline-flex',
 					bgcolor: containerBgColor,
 					borderRadius: '8px',
-					p: '4px',
 					mb: 2,
+          p: '2px',
 					border: `1px solid ${borderColor}`,
 					overflow: 'hidden',
 					'& .MuiToggleButtonGroup-grouped': {
-						border: 0,
+						border: `1px solid ${borderColor}`,
+            m: '2px',
 						borderRadius: 2,
 						minHeight: height,
 						height: height,
@@ -83,6 +85,32 @@ export default function TabSlider({
 				{tabs.map((tab) => (
 					<ToggleButton key={tab.value} value={tab.value}>
 						{tab.label}
+						{tab.units !== undefined && (
+							<Box
+								component="span"
+								sx={{
+									display: 'inline-flex',
+									alignItems: 'center',
+									justifyContent: 'center',
+									ml: 1,
+									backgroundColor: 'rgba(255, 255, 255, 0.85)',
+									color: '#333',
+									borderRadius: '20px',
+									fontSize: '0.75rem',
+									fontWeight: 'bold',
+									padding: '2 8px',
+									minWidth: '20px',
+									height: '20px',
+									transition: `background-color ${transitionDuration}`,
+									'.Mui-selected &': {
+										backgroundColor: 'rgba(255, 255, 255, 0.85)',
+										color: color,
+									}
+								}}
+							>
+								{tab.units}
+							</Box>
+						)}
 					</ToggleButton>
 				))}
 			</ToggleButtonGroup>

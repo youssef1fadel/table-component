@@ -54,21 +54,25 @@ const tabs = [
 	{
 		label: 'MV4',
 		value: 0,
+		units: unitData.length,
 		filter: (unit: Unit) => unit.project.includes('MV4'),
 	},
 	{
 		label: 'Tab name',
 		value: 1,
+		units: unitData.length,
 		filter: (unit: Unit) => unit.category === 'Villa',
 	},
 	{
 		label: 'Tab1.2',
 		value: 2,
+		units: unitData.length,
 		filter: (unit: Unit) => unit.category === 'I-Villa Roof Garden',
 	},
 	{
 		label: 'Project name',
 		value: 3,
+		units: unitData.length,
 		filter: (unit: Unit) => unit.project === 'MV The Villas',
 	},
 ]
@@ -78,26 +82,18 @@ const columnConfig: ColumnConfig[] = [
 	{
 		key: 'unitId',
 		primaryLabel: 'Unit ID',
-		secondaryLabel: 'Unit Code',
-		secondaryStyle: 'success',
 	},
 	{
 		key: 'unitTypeCode',
 		primaryLabel: 'Unit Type Code',
-		secondaryLabel: 'Unit Type',
-		secondaryStyle: 'success',
 	},
 	{
 		key: 'category',
 		primaryLabel: 'Category',
-		secondaryLabel: 'Unmapped',
-		secondaryStyle: 'error',
 	},
 	{
 		key: 'project',
 		primaryLabel: 'Project',
-		secondaryLabel: 'Unmapped',
-		secondaryStyle: 'error',
 	},
 ]
 
@@ -122,8 +118,8 @@ export default function UnitManager() {
 	return (
 		<Box sx={{ border: '1px solid #E9EAEB', borderRadius: '8px' }}>
 			<Box p={2} display="flex" alignItems="center">
-				<Typography variant="h6" component="label">
-					Units
+				<Typography component="label" fontWeight={'bold'}>
+					Sheet preview
 				</Typography>
 				<Box
 					component="span"

@@ -32,8 +32,6 @@ export type Unit = {
 export type ColumnConfig = {
 	key: string
 	primaryLabel: string
-	secondaryLabel: string
-	secondaryStyle: 'success' | 'error'
 }
 
 type UnitTableProps = {
@@ -48,10 +46,9 @@ export default function UnitTable({ data, columnConfig }: UnitTableProps) {
 	const columnStyles = {
 		header: {
 			primary: { fontSize: 'small', fontWeight: 'bold', color: '#717680' },
-			secondary: {
-				success: { fontWeight: 'bold', color: '#17B26A' },
-				error: { fontWeight: 'bold', color: 'red' },
-			},
+		},
+		cell: {
+			padding: '4px 16px', // Reduced padding for all cells
 		},
 	}
 
@@ -74,7 +71,7 @@ export default function UnitTable({ data, columnConfig }: UnitTableProps) {
 								)
 									? 'primary.main'
 									: 'text.disabled',
-								marginBottom: '-4.5px', // Negative margin to bring icons closer
+								marginBottom: '-4.5px',
 							}}
 						/>
 						<KeyboardArrowDownIcon
@@ -86,17 +83,11 @@ export default function UnitTable({ data, columnConfig }: UnitTableProps) {
 								)
 									? 'primary.main'
 									: 'text.disabled',
-								marginTop: '-4.5px', // Negative margin to bring icons closer
+								marginTop: '-4.5px',
 							}}
 						/>
 					</Stack>
 				</Box>
-				<Typography
-					variant="caption"
-					sx={columnStyles.header.secondary[config.secondaryStyle]}
-				>
-					{config.secondaryLabel}
-				</Typography>
 			</Box>
 		),
 	}))
@@ -123,7 +114,10 @@ export default function UnitTable({ data, columnConfig }: UnitTableProps) {
 								<TableCell
 									key={header.id}
 									onClick={header.column.getToggleSortingHandler()}
-									sx={{ cursor: 'pointer' }}
+									sx={{
+										backgroundColor: '#ECFDF3',
+										cursor: 'pointer',
+									}}
 								>
 									{flexRender(
 										header.column.columnDef.header,
@@ -138,7 +132,13 @@ export default function UnitTable({ data, columnConfig }: UnitTableProps) {
 					{table.getRowModel().rows.map((row) => (
 						<TableRow key={row.id}>
 							{row.getVisibleCells().map((cell) => (
-								<TableCell key={cell.id} sx={{ color: '#717680' }}>
+								<TableCell
+									key={cell.id}
+									sx={{
+										color: '#717680',
+										padding: columnStyles.cell.padding,
+									}}
+								>
 									{flexRender(cell.column.columnDef.cell, cell.getContext())}
 								</TableCell>
 							))}
