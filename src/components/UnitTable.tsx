@@ -37,19 +37,52 @@ export type ColumnConfig = {
 type UnitTableProps = {
 	data: Unit[]
 	columnConfig: ColumnConfig[]
+	textColor?: string
+	borderColor?: string
+	headerTextColor?: string
+	cellPadding?: string
 }
 
-export default function UnitTable({ data, columnConfig }: UnitTableProps) {
+export default function UnitTable({
+	data,
+	columnConfig,
+	textColor = '#717680',
+	borderColor = '#E9EAEB',
+	headerTextColor = '#717680',
+	cellPadding = '4px 16px',
+}: UnitTableProps) {
 	const [sorting, setSorting] = React.useState<SortingState>([])
 
 	// Column styling configuration
 	const columnStyles = {
 		header: {
-			primary: { fontSize: 'small', fontWeight: 'bold', color: '#717680' },
+			primary: {
+				fontSize: 'small',
+				fontWeight: 'bold',
+				color: headerTextColor,
+			},
 		},
 		cell: {
-			padding: '4px 16px', // Reduced padding for all cells
+			padding: cellPadding,
 		},
+	}
+
+	// Table container styles
+	const tableContainerStyles = {
+		border: `1px solid ${borderColor}`,
+		minWidth: '100%',
+		boxShadow: 'none',
+	}
+
+	// Cell styles
+	const tableCellStyles = {
+		color: textColor,
+		padding: columnStyles.cell.padding,
+	}
+
+	// Header cell styles
+	const headerCellStyles = {
+		cursor: 'pointer',
 	}
 
 	// Generate columns from config
@@ -102,10 +135,7 @@ export default function UnitTable({ data, columnConfig }: UnitTableProps) {
 	})
 
 	return (
-		<TableContainer
-			component={Paper}
-			sx={{ border: '1px solid #E9EAEB', minWidth: '100%', boxShadow: 'none' }}
-		>
+		<TableContainer component={Paper} sx={tableContainerStyles}>
 			<Table sx={{ minWidth: '100%' }}>
 				<TableHead>
 					{table.getHeaderGroups().map((headerGroup) => (
@@ -114,9 +144,7 @@ export default function UnitTable({ data, columnConfig }: UnitTableProps) {
 								<TableCell
 									key={header.id}
 									onClick={header.column.getToggleSortingHandler()}
-									sx={{
-										cursor: 'pointer',
-									}}
+									sx={headerCellStyles}
 								>
 									{flexRender(
 										header.column.columnDef.header,
@@ -131,13 +159,7 @@ export default function UnitTable({ data, columnConfig }: UnitTableProps) {
 					{table.getRowModel().rows.map((row) => (
 						<TableRow key={row.id}>
 							{row.getVisibleCells().map((cell) => (
-								<TableCell
-									key={cell.id}
-									sx={{
-										color: '#717680',
-										padding: columnStyles.cell.padding,
-									}}
-								>
+								<TableCell key={cell.id} sx={tableCellStyles}>
 									{flexRender(cell.column.columnDef.cell, cell.getContext())}
 								</TableCell>
 							))}

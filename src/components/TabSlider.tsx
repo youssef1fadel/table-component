@@ -21,6 +21,10 @@ type TabSliderProps = {
 	containerBgColor?: string
 	textColor?: string
 	indicatorColor?: string
+	// Add new color props with defaults
+	badgeDefaultBgColor?: string
+	badgeDefaultTextColor?: string
+	badgeSelectedBgColor?: string
 }
 
 export default function TabSlider({
@@ -34,6 +38,10 @@ export default function TabSlider({
 	containerBgColor = 'transparent',
 	textColor = '#717680',
 	indicatorColor = '#015C9A',
+	// Add new color params with defaults
+	badgeDefaultBgColor = 'rgba(234, 234, 234, 0.85)',
+	badgeDefaultTextColor = '#444',
+	badgeSelectedBgColor = 'rgba(1, 92, 154, 0.15)',
 }: TabSliderProps) {
 	// Handle tab change
 	const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
@@ -51,6 +59,58 @@ export default function TabSlider({
 		}
 	}
 
+	// Extract tab styles to improve readability
+	const tabStyles = {
+		color: textColor,
+		fontWeight: 'medium',
+		textTransform: 'none',
+		borderRadius: '8px 8px 0px 0px',
+		minHeight: height,
+		height: height,
+		transition: `color ${transitionDuration}`,
+		opacity: 1,
+		padding: '0 8px',
+		'&.Mui-selected': {
+			color,
+			fontWeight: 'bold',
+		},
+		'&.ignored': {
+			opacity: 0.6,
+			textDecoration: 'line-through',
+		},
+	}
+
+	// Extract badge styles
+	const badgeStyles = {
+		display: 'inline-flex',
+		alignItems: 'center',
+		justifyContent: 'center',
+		ml: 1,
+		backgroundColor: badgeDefaultBgColor,
+		borderRadius: '20px',
+		color: badgeDefaultTextColor,
+		fontSize: '0.75rem',
+		fontWeight: 'bold',
+		padding: '2 8px',
+		minWidth: '20px',
+		height: '20px',
+		transition: `background-color ${transitionDuration}`,
+		'.Mui-selected &': {
+			color: color,
+			backgroundColor: badgeSelectedBgColor,
+		},
+	}
+
+	// Extract icon button styles
+	const iconButtonStyles = {
+		color: 'inherit',
+		opacity: 0.7,
+		'&:hover': {
+			opacity: 1,
+			bgcolor: 'transparent',
+		},
+	}
+
 	return (
 		<Box sx={{ bgcolor: containerBgColor }}>
 			<Tabs
@@ -63,25 +123,7 @@ export default function TabSlider({
 				}}
 				sx={{
 					minHeight: height,
-					'& .MuiTab-root': {
-						color: textColor,
-						fontWeight: 'medium',
-						textTransform: 'none',
-            borderRadius: '8px 8px 0px 0px',
-						minHeight: height,
-						height: height,
-						transition: `color ${transitionDuration}`,
-						opacity: 1,
-						padding: '0 8px', // Reduced horizontal padding (default is 12px)
-						'&.Mui-selected': {
-							color,
-							fontWeight: 'bold',
-						},
-						'&.ignored': {
-							opacity: 0.6,
-							textDecoration: 'line-through',
-						},
-					},
+					'& .MuiTab-root': tabStyles,
 				}}
 			>
 				{tabs.map((tab) => (
@@ -95,14 +137,7 @@ export default function TabSlider({
 									<IconButton
 										size="small"
 										onClick={(e) => handleToggleIgnore(e, tab.value)}
-										sx={{
-											color: 'inherit',
-											opacity: 0.7,
-											'&:hover': {
-												opacity: 1,
-												bgcolor: 'transparent',
-											},
-										}}
+										sx={iconButtonStyles}
 									>
 										{tab.ignored ? (
 											<VisibilityOffIcon fontSize="small" />
@@ -113,28 +148,7 @@ export default function TabSlider({
 								)}
 								{tab.label}
 								{tab.units !== undefined && (
-									<Box
-										component="span"
-										sx={{
-											display: 'inline-flex',
-											alignItems: 'center',
-											justifyContent: 'center',
-											ml: 1,
-											backgroundColor: 'rgba(234, 234, 234, 0.85)',
-											borderRadius: '20px',
-											color: '#444',
-											fontSize: '0.75rem',
-											fontWeight: 'bold',
-											padding: '2 8px',
-											minWidth: '20px',
-											height: '20px',
-											transition: `background-color ${transitionDuration}`,
-											'.Mui-selected &': {
-												color: color,
-												backgroundColor: 'rgba(1, 92, 154, 0.15)',
-											},
-										}}
-									>
+									<Box component="span" sx={badgeStyles}>
 										{tab.units}
 									</Box>
 								)}
