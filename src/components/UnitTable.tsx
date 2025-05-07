@@ -115,7 +115,6 @@ export default function UnitTable({ data, columnConfig }: UnitTableProps) {
 									key={header.id}
 									onClick={header.column.getToggleSortingHandler()}
 									sx={{
-										backgroundColor: '#ECFDF3',
 										cursor: 'pointer',
 									}}
 								>

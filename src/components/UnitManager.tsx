@@ -77,21 +77,25 @@ const getInputTabs = (data: Unit[]) => [
     label: 'MV4',
     value: 0,
     filter: (unit: Unit) => unit.project.includes('MV4'),
+    ignored: false
   },
   {
     label: 'Tab name',
     value: 1,
     filter: (unit: Unit) => unit.category === 'Villa',
+    ignored: false
   },
   {
     label: 'Tab1.2',
     value: 2,
     filter: (unit: Unit) => unit.category === 'I-Villa Roof Garden',
+    ignored: false
   },
   {
     label: 'Project name',
     value: 3,
     filter: (unit: Unit) => unit.project === 'MV The Villas',
+    ignored: false
   },
 ];
 
@@ -101,20 +105,22 @@ const getOutputTabs = (data: Unit[]) => [
     label: 'Output 1',
     value: 0,
     filter: (unit: Unit) => unit.project.includes('Output'),
+    ignored: false
   },
   {
     label: 'Output 2',
     value: 1,
     filter: (unit: Unit) => unit.category === 'Villa Output',
+    ignored: false
   },
   {
     label: 'Output 3',
     value: 2,
     filter: (unit: Unit) => unit.category === 'O-Villa Roof Garden',
+    ignored: false
   },
 ];
 
-// Abstract column definitions
 const columnConfig: ColumnConfig[] = [
 	{
 		key: 'unitId',
@@ -137,21 +143,25 @@ const columnConfig: ColumnConfig[] = [
 export default function UnitManager() {
 	const [activeTab, setActiveTab] = React.useState(3)
 	const [sheetType, setSheetType] = React.useState<'input' | 'output'>('input')
+	
+	// Store tabs state with ignored property
+	const [inputTabs, setInputTabs] = React.useState(getInputTabs(inputUnitData));
+	const [outputTabs, setOutputTabs] = React.useState(getOutputTabs(outputUnitData));
 
 	// Calculate tabs with correct unit counts
 	const inputTabsWithCounts = React.useMemo(() => {
-		return getInputTabs(inputUnitData).map(tab => ({
+		return inputTabs.map(tab => ({
 			...tab,
 			units: inputUnitData.filter(tab.filter).length
 		}));
-	}, []);
+	}, [inputTabs]);
 
 	const outputTabsWithCounts = React.useMemo(() => {
-		return getOutputTabs(outputUnitData).map(tab => ({
+		return outputTabs.map(tab => ({
 			...tab,
 			units: outputUnitData.filter(tab.filter).length
 		}));
-	}, []);
+	}, [outputTabs]);
 
 	const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
 		setActiveTab(newValue)
@@ -163,6 +173,28 @@ export default function UnitManager() {
 			setSheetType(type)
 			// Reset to first tab when switching sheet types
 			setActiveTab(type === 'input' ? 3 : 0)
+		}
+	}
+	
+	// Add handler to toggle ignore state
+	const handleToggleIgnore = (tabValue: number | string) => {
+		if (sheetType === 'input') {
+			setInputTabs(prevTabs => prevTabs.map(tab => 
+				tab.value === tabValue ? { ...tab, ignored: !tab.ignored } : tab
+			));
+		} else {
+			setOutputTabs(prevTabs => prevTabs.map(tab => 
+				tab.value === tabValue ? { ...tab, ignored: !tab.ignored } : tab
+			));
+		}
+		
+		// If the ignored tab is currently active, switch to another tab
+		if (tabValue === activeTab) {
+			const activeTabs = sheetType === 'input' ? inputTabsWithCounts : outputTabsWithCounts;
+			const nonIgnoredTab = activeTabs.find(tab => tab.value !== tabValue && !tab.ignored);
+			if (nonIgnoredTab) {
+				setActiveTab(Number(nonIgnoredTab.value));
+			}
 		}
 	}
 
@@ -224,6 +256,7 @@ export default function UnitManager() {
 					tabs={activeTabs}
 					activeIndex={activeTab}
 					onChange={handleTabChange}
+					onToggleIgnore={handleToggleIgnore}
 				/>
 
 				<ToggleButtonGroup
@@ -235,13 +268,13 @@ export default function UnitManager() {
 					sx={{
 						display: 'inline-flex',
 						bgcolor: 'transparent',
-						borderRadius: '12px',
+						borderRadius: '8px',
 						border: '1px solid #E9EAEB',
 						overflow: 'hidden',
 						'& .MuiToggleButtonGroup-grouped': {
 							minHeight: 36,
 							height: 36,
-              border: 0,
+							border: 0,
 							textTransform: 'none',
 							transition: 'background-color 0.1s, color 0.1s',
 							color: '#717680',
