@@ -46,167 +46,57 @@ const STYLES = {
 	},
 }
 
-// Sample data for input sheet
-const inputUnitData: Unit[] = [
-	{
-		unitId: 'M-CRWN-133-00-01',
-		unitTypeCode: 'I-VILLA R',
-		category: 'Villa',
-		project: 'MV The Villas',
-	},
-	{
-		unitId: 'M-IV-A-220-A4-4',
-		unitTypeCode: 'I-VILLA R',
-		category: 'I-Villa Roof Garden',
-		project: 'MV The Villas',
-	},
-	{
-		unitId: 'M-IV-A-220-C4-1',
-		unitTypeCode: 'I-VILLA R',
-		category: 'I-Villa Roof Garden',
-		project: 'MV The Villas',
-	},
-	{
-		unitId: 'M-IV-A-220-C4-3',
-		unitTypeCode: 'I-VILLA R',
-		category: 'I-Villa Roof Garden',
-		project: 'MV The Villas',
-	},
-	{
-		unitId: 'M-IV-A-221-C4-1',
-		unitTypeCode: 'I-VILLA R',
-		category: 'I-Villa Sky Garden',
-		project: 'MV The Villas',
-	},
-	{
-		unitId: 'M-IV-A-243-A4-2',
-		unitTypeCode: 'I-VILLA R',
-		category: 'I-Villa Sky Garden',
-		project: 'MV The Villas',
-	},
-	{
-		unitId: 'M-IV-A-243-C4-2',
-		unitTypeCode: 'I-VILLA R',
-		category: 'I-Villa Roof Garden',
-		project: 'MV The Villas',
-	},
-]
+// Define the Tab type
+export type Tab = {
+	label: string
+	value: number
+	filter: (unit: Unit) => boolean
+	ignored: boolean
+}
 
-// Sample data for output sheet
-const outputUnitData: Unit[] = [
-	{
-		unitId: 'O-CRWN-133-00-01',
-		unitTypeCode: 'O-VILLA R',
-		category: 'Villa Output',
-		project: 'MV The Villas Output',
-	},
-	{
-		unitId: 'O-IV-A-220-A4-4',
-		unitTypeCode: 'O-VILLA R',
-		category: 'O-Villa Roof Garden',
-		project: 'MV The Villas Output',
-	},
-	{
-		unitId: 'O-IV-A-220-C4-1',
-		unitTypeCode: 'O-VILLA R',
-		category: 'O-Villa Roof Garden',
-		project: 'MV The Villas Output',
-	},
-]
+// Define props for TableManager
+export interface TableManagerProps {
+	inputTabs: Tab[]
+	outputTabs: Tab[]
+	inputUnitData: Unit[]
+	outputUnitData: Unit[]
+	columnConfig: ColumnConfig[]
+	initialActiveTab?: number
+	initialSheetType?: 'input' | 'output'
+}
 
-// Define input tab values without hardcoding unit counts
-const getInputTabs = (data: Unit[]) => [
-	{
-		label: 'MV4',
-		value: 0,
-		filter: (unit: Unit) => unit.project.includes('MV4'),
-		ignored: false,
-	},
-	{
-		label: 'Tab name',
-		value: 1,
-		filter: (unit: Unit) => unit.category === 'Villa',
-		ignored: false,
-	},
-	{
-		label: 'Tab1.2',
-		value: 2,
-		filter: (unit: Unit) => unit.category === 'I-Villa Roof Garden',
-		ignored: false,
-	},
-	{
-		label: 'Project name',
-		value: 3,
-		filter: (unit: Unit) => unit.project === 'MV The Villas',
-		ignored: false,
-	},
-]
-
-// Define output tab values without hardcoding unit counts
-const getOutputTabs = (data: Unit[]) => [
-	{
-		label: 'Output 1',
-		value: 0,
-		filter: (unit: Unit) => unit.project.includes('Output'),
-		ignored: false,
-	},
-	{
-		label: 'Output 2',
-		value: 1,
-		filter: (unit: Unit) => unit.category === 'Villa Output',
-		ignored: false,
-	},
-	{
-		label: 'Output 3',
-		value: 2,
-		filter: (unit: Unit) => unit.category === 'O-Villa Roof Garden',
-		ignored: false,
-	},
-]
-
-const columnConfig: ColumnConfig[] = [
-	{
-		key: 'unitId',
-		primaryLabel: 'Unit ID',
-	},
-	{
-		key: 'unitTypeCode',
-		primaryLabel: 'Unit Type Code',
-	},
-	{
-		key: 'category',
-		primaryLabel: 'Category',
-	},
-	{
-		key: 'project',
-		primaryLabel: 'Project',
-	},
-]
-
-export default function TableManager() {
-	const [activeTab, setActiveTab] = React.useState(3)
-	const [sheetType, setSheetType] = React.useState<'input' | 'output'>('input')
+export default function TableManager({
+	inputTabs,
+	outputTabs,
+	inputUnitData,
+	outputUnitData,
+	columnConfig,
+	initialActiveTab = 0,
+	initialSheetType = 'input',
+}: TableManagerProps) {
+	const [activeTab, setActiveTab] = React.useState(initialActiveTab)
+	const [sheetType, setSheetType] = React.useState<'input' | 'output'>(
+		initialSheetType
+	)
 
 	// Store tabs state with ignored property
-	const [inputTabs, setInputTabs] = React.useState(getInputTabs(inputUnitData))
-	const [outputTabs, setOutputTabs] = React.useState(
-		getOutputTabs(outputUnitData)
-	)
+	const [inputTabsState, setInputTabsState] = React.useState(inputTabs)
+	const [outputTabsState, setOutputTabsState] = React.useState(outputTabs)
 
 	// Calculate tabs with correct unit counts
 	const inputTabsWithCounts = React.useMemo(() => {
-		return inputTabs.map((tab) => ({
+		return inputTabsState.map((tab) => ({
 			...tab,
 			units: inputUnitData.filter(tab.filter).length,
 		}))
-	}, [inputTabs])
+	}, [inputTabsState, inputUnitData])
 
 	const outputTabsWithCounts = React.useMemo(() => {
-		return outputTabs.map((tab) => ({
+		return outputTabsState.map((tab) => ({
 			...tab,
 			units: outputUnitData.filter(tab.filter).length,
 		}))
-	}, [outputTabs])
+	}, [outputTabsState, outputUnitData])
 
 	const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
 		setActiveTab(newValue)
@@ -219,57 +109,62 @@ export default function TableManager() {
 		if (newValue !== null) {
 			const type = newValue as 'input' | 'output'
 			setSheetType(type)
-			// Reset to first tab when switching sheet types
-			setActiveTab(type === 'input' ? 3 : 0)
+			// Find the first non-ignored tab to set as active
+			const tabs = type === 'input' ? inputTabsWithCounts : outputTabsWithCounts
+			const firstAvailableTab = tabs.find((tab) => !tab.ignored)
+			if (firstAvailableTab) {
+				setActiveTab(firstAvailableTab.value)
+			}
 		}
 	}
 
 	// Add handler to toggle ignore state
 	const handleToggleIgnore = (tabValue: number | string) => {
 		// Store current tab state before making changes
-		const currentTabs = sheetType === 'input' ? inputTabs : outputTabs;
-		const tabBeingToggled = currentTabs.find(tab => tab.value === tabValue);
-		
+		const currentTabs = sheetType === 'input' ? inputTabsState : outputTabsState
+		const tabBeingToggled = currentTabs.find((tab) => tab.value === tabValue)
+
 		// If tab doesn't exist or is undefined, do nothing
-		if (!tabBeingToggled) return;
-		
+		if (!tabBeingToggled) return
+
 		// Get the new ignored state (toggle the current state)
-		const willBeIgnored = !tabBeingToggled.ignored;
-		
+		const willBeIgnored = !tabBeingToggled.ignored
+
 		// Update the tabs state
 		if (sheetType === 'input') {
-		  setInputTabs((prevTabs) =>
-			prevTabs.map((tab) =>
-			  tab.value === tabValue ? { ...tab, ignored: willBeIgnored } : tab
+			setInputTabsState((prevTabs) =>
+				prevTabs.map((tab) =>
+					tab.value === tabValue ? { ...tab, ignored: willBeIgnored } : tab
+				)
 			)
-		  )
 		} else {
-		  setOutputTabs((prevTabs) =>
-			prevTabs.map((tab) =>
-			  tab.value === tabValue ? { ...tab, ignored: willBeIgnored } : tab
+			setOutputTabsState((prevTabs) =>
+				prevTabs.map((tab) =>
+					tab.value === tabValue ? { ...tab, ignored: willBeIgnored } : tab
+				)
 			)
-		  )
 		}
-	  
+
 		// Only switch tabs if ALL of these conditions are true:
 		// 1. The tab being toggled is the active tab
 		// 2. The tab is being set to ignored (not being un-ignored)
 		// 3. There's at least one non-ignored tab available to switch to
 		if (tabValue === activeTab && willBeIgnored) {
-		  const activeTabs = sheetType === 'input' ? inputTabsWithCounts : outputTabsWithCounts;
-		  
-		  // Find a non-ignored tab to switch to
-		  const nonIgnoredTab = activeTabs.find(
-			(tab) => tab.value !== tabValue && !tab.ignored
-		  );
-		  
-		  // Only switch if we found a non-ignored tab
-		  if (nonIgnoredTab) {
-			setActiveTab(Number(nonIgnoredTab.value));
-		  }
+			const activeTabs =
+				sheetType === 'input' ? inputTabsWithCounts : outputTabsWithCounts
+
+			// Find a non-ignored tab to switch to
+			const nonIgnoredTab = activeTabs.find(
+				(tab) => tab.value !== tabValue && !tab.ignored
+			)
+
+			// Only switch if we found a non-ignored tab
+			if (nonIgnoredTab) {
+				setActiveTab(Number(nonIgnoredTab.value))
+			}
 		}
 		// If we're un-ignoring a tab or toggling a non-active tab, do nothing with tab selection
-	  }
+	}
 
 	// Get the active data and tabs based on sheet type
 	const activeUnitData = sheetType === 'input' ? inputUnitData : outputUnitData
